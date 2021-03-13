@@ -33,3 +33,4 @@ folhas = n_folhas(local_doc,0)
 
 rename(local_doc, integral, "CÓPIA INTEGRAL. FLS. 1 A "+str(folhas)+'.pdf')
 print('Renomeado para: '+"CÓPIA INTEGRAL. FLS. 1 A "+str(folhas)+'.pdf')
+teste
