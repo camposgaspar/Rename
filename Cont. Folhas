@@ -1,20 +1,35 @@
-import PyPDF2
 from PyPDF2 import PdfFileReader
 import os
 
 local_doc = input(r"Onde está o arquivo?") #Localiza folder
-os.chdir(local_doc)                        #Define local
+os.chdir(local_doc)#Define local
+lista_docs = os.listdir(local_doc)
+
+def numero_docs():
+    x = int(len(lista_docs))
+    return(x)
+
+for i in range(0, numero_docs()):
+    print('[',i,']',lista_docs[i])
+
+
+doc = int(input("Selecione : "))
+
+integral = os.listdir(local_doc)[doc]
 
 #Funcao conta paginas
 def n_folhas(localdoc,x):
-    integral = os.listdir(local_doc)[x] ##Onde está o documentom número do documento
     reader = PdfFileReader(integral)
     folhas = reader.getNumPages()
-
     return(folhas)   #Total de folhas
+
+def rename(diretorio,nome_old,nome_new):
+    for arquivos in os.listdir(diretorio):
+        os.rename(os.path.join(diretorio, arquivos), os.path.join(diretorio, arquivos.replace(nome_old, nome_new)))
 
 #N. de paginas no PDF selecionado
 folhas = n_folhas(local_doc,0)
 
-os.listdir(local_doc)[0] # Define o documento à ser renomeado. 0 será uma variavel input, definida pela linha 5-7 no futuro
-os.rename(local_doc, "CÓPIA INTEGRAL. FLS. 1 A "+str(folhas))
+
+rename(local_doc, integral, "CÓPIA INTEGRAL. FLS. 1 A "+str(folhas)+'.pdf')
+print('Renomeado para: '+"CÓPIA INTEGRAL. FLS. 1 A "+str(folhas)+'.pdf')
