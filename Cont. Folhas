@@ -13,9 +13,9 @@ for i in range(0, numero_docs()):
     print('[',i,']',lista_docs[i])
 
 
-doc = int(input("Selecione : "))
+selecao = int(input("Selecione : "))
 
-integral = os.listdir(local_doc)[doc]
+integral = os.listdir(local_doc)[selecao]
 
 #Funcao conta paginas
 def n_folhas(localdoc,x):
