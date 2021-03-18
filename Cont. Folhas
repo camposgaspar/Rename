@@ -36,21 +36,6 @@ class Handler(FileSystemEventHandler):
         if event.is_directory:
             return None
 
-        elif event.event_type == 'created':
-            integral = os.listdir(local_doc)[0]
-
-            def n_folhas():
-                reader = PdfFileReader(integral)
-                folhas = reader.getNumPages()
-                return folhas  # Total de folhas
-
-            def rename(diretorio, nome_old, nome_new):
-                for arquivos in os.listdir(diretorio):
-                    os.rename(os.path.join(diretorio, arquivos),
-                              os.path.join(diretorio, arquivos.replace(nome_old, nome_new)))
-            rename(local_doc, integral, "CÓPIA INTEGRAL. FLS. 1 A " + str(n_folhas()) + '.pdf')
-
-
         elif event.event_type == 'modified':
             # Taken any action here when a file is modified.
             integral = os.listdir(local_doc)[0]
@@ -66,7 +51,7 @@ class Handler(FileSystemEventHandler):
                     os.rename(os.path.join(diretorio, arquivos),
                               os.path.join(diretorio, arquivos.replace(nome_old, nome_new)))
             rename(local_doc, integral, "CÓPIA INTEGRAL. FLS. 1 A " + str(n_folhas()) + '.pdf')
-
+            print("renm")
 
 if __name__ == '__main__':
     w = Watcher()
