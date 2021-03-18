@@ -1,35 +1,56 @@
 from PyPDF2 import PdfFileReader
 import os
 
-local_doc = input(r"Onde está o arquivo?") #Localiza folder
-os.chdir(local_doc)#Define local
-lista_docs = os.listdir(local_doc)
+import time
+from watchdog.observers import Observer
+from watchdog.events import FileSystemEventHandler
 
-def numero_docs():
-    x = int(len(lista_docs))
-    return(x)
-
-for i in range(0, numero_docs()):
-    print('[',i,']',lista_docs[i])
+local_doc = r"C:\Users\Gabriel\Desktop\DOCS\RENOMEAR INTEGRAL"  # Localiza folder
+os.chdir(local_doc)  # Define local
 
 
-selecao = int(input("Selecione : "))
+class Watcher:
+    DIRECTORY_TO_WATCH = r"C:\Users\Gabriel\Desktop\DOCS\RENOMEAR INTEGRAL"
 
-integral = os.listdir(local_doc)[selecao]
+    def __init__(self):
+        self.observer = Observer()
 
-#Funcao conta paginas
-def n_folhas(localdoc,x):
-    reader = PdfFileReader(integral)
-    folhas = reader.getNumPages()
-    return(folhas)   #Total de folhas
+    def run(self):
+        event_handler = Handler()
+        self.observer.schedule(event_handler, self.DIRECTORY_TO_WATCH, recursive=True)
+        self.observer.start()
+        try:
+            while True:
+                time.sleep(5)
+        except:
+            self.observer.stop()
+            print("Error")
 
-def rename(diretorio,nome_old,nome_new):
-    for arquivos in os.listdir(diretorio):
-        os.rename(os.path.join(diretorio, arquivos), os.path.join(diretorio, arquivos.replace(nome_old, nome_new)))
-
-#N. de paginas no PDF selecionado
-folhas = n_folhas(local_doc,0)
+        self.observer.join()
 
 
-rename(local_doc, integral, "CÓPIA INTEGRAL. FLS. 1 A "+str(folhas)+'.pdf')
-print('Renomeado para: '+"CÓPIA INTEGRAL. FLS. 1 A "+str(folhas)+'.pdf')
+class Handler(FileSystemEventHandler):
+
+    @staticmethod
+    def on_any_event(event):
+        if event.is_directory:
+            return None
+
+        elif event.event_type == 'created':
+            integral = os.listdir(local_doc)[0]
+
+            def n_folhas():
+                reader = PdfFileReader(integral)
+                folhas = reader.getNumPages()
+                return folhas  # Total de folhas
+
+            def rename(diretorio, nome_old, nome_new):
+                for arquivos in os.listdir(diretorio):
+                    os.rename(os.path.join(diretorio, arquivos),
+                              os.path.join(diretorio, arquivos.replace(nome_old, nome_new)))
+            rename(local_doc, integral, "CÓPIA INTEGRAL. FLS. 1 A " + str(n_folhas()) + '.pdf')
+
+
+if __name__ == '__main__':
+    w = Watcher()
+    w.run()
